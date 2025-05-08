@@ -15,6 +15,8 @@ vim.keymap.set("v", "<space>x", ":lua<CR>")
 vim.keymap.set("n", "<M-j>", "<cmd>cnext<CR>")
 vim.keymap.set("n", "<M-k>", "<cmd>cprev<CR>")
 
+vim.keymap.set("n", "-", "<cmd>Oil<CR>")
+
 -- Highlight when yanking text
 -- See `:help vim.highlight.on_yank()`
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -33,10 +35,19 @@ vim.api.nvim_create_autocmd('TermOpen', {
   end,
 })
 
+local job_id = 0
 vim.keymap.set("n", "<space>st", function()
   vim.cmd.vnew()
   vim.cmd.term()
   vim.cmd.wincmd("J")
   vim.api.nvim_win_set_height(0, 5)
+
+  job_id = vim.bo.channel
+end
+)
+
+-- Create shortcut to run project script
+vim.keymap.set("n", "<space>exm", function()
+  vim.fn.chansend(job_id, { "echo 'hi' && ls\r\n" })
 end
 )
