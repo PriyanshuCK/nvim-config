@@ -56,3 +56,25 @@ end
 
 vim.api.nvim_create_user_command("Floaterminal", toggle_terminal, {})
 vim.keymap.set({ "n", "t" }, "<space>tt", toggle_terminal)
+
+local function run_gwr_brochure_website()
+  local cwd = vim.fn.getcwd():gsub("\\", "/") -- Normalize Windows path
+
+  if not vim.api.nvim_win_is_valid(state.floating.win) then
+    state.floating = create_floating_window { buf = state.floating.buf }
+
+    if vim.bo[state.floating.buf].buftype ~= "terminal" then
+      vim.cmd("terminal")
+    end
+  else
+    vim.api.nvim_set_current_win(state.floating.win)
+  end
+
+  -- Use vim.schedule to ensure the terminal is ready
+  vim.schedule(function()
+    vim.fn.chansend(vim.b.terminal_job_id, "cd src/rendering && npm run start:connected_onpremise_ssl\r\n")
+    vim.cmd("startinsert")
+  end)
+end
+
+vim.keymap.set("n", "<space>gwr", run_gwr_brochure_website, { desc = "Start GWR brochure site" })
