@@ -46,8 +46,3 @@ vim.keymap.set("n", "<space>st", function()
   job_id = vim.bo.channel
 end
 )
-
-vim.keymap.set("n", "<space>gwr", function()
-  vim.fn.chansend(job_id, { "cd src/rendering && npm run start:connected_onpremise_ssl\r\n" })
-end
-)
